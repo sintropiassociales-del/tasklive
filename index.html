@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex,nofollow">
+<title>Task live · Sintropía Social</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#6B21F5; --purple-d:#4F14C4; --orange:#FF6B1A; --orange-d:#D9540A;
+  --ink:#1B1530; --muted:#645F78; --line:#E6E2F0; --soft:#F6F3FF; --bg:#FFFFFF;
+  --ok:#1B7F3B; --err:#B3261E;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Open Sans',system-ui,sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:'Montserrat','Open Sans',sans-serif;line-height:1.2;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 64px}
+.wrap.narrow{max-width:640px}
+header.top{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}
+header.top .in{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.brand{font-family:'Montserrat',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;color:var(--purple)}
+.brand b{color:var(--orange);font-weight:800}
+.by{color:var(--muted);font-size:13px}
+.spacer{flex:1}
+.rule{display:flex;align-items:center;gap:6px;margin:12px 0 4px}
+.rule i{display:block;height:4px;border-radius:2px;background:var(--purple)}
+.rule i:nth-child(1){width:34px}.rule i:nth-child(2){width:5px;height:5px;border-radius:50%;background:var(--orange)}.rule i:nth-child(3){width:16px}
+.page-title{font-size:30px;font-weight:800;margin-top:32px}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+section.card{border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-top:22px;background:#fff}
+section.card h2{font-size:19px;font-weight:700}
+section.card .sub{color:var(--muted);font-size:14px;margin:4px 0 16px}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+label small{font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=url],textarea{
+  width:100%;padding:11px 12px;border:1.5px solid #CFC9E0;border-radius:8px;font:inherit;color:var(--ink);background:#fff}
+textarea{min-height:88px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid rgba(107,33,245,.35);outline-offset:1px;border-color:var(--purple)}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.row>*{flex:1 1 220px}
+.btn{display:inline-block;border:0;border-radius:8px;padding:11px 18px;font:600 15px 'Open Sans',sans-serif;cursor:pointer;text-decoration:none;text-align:center}
+.btn.primary{background:var(--purple);color:#fff}.btn.primary:hover{background:var(--purple-d)}
+.btn.act{background:var(--orange);color:#1B1530}.btn.act:hover{background:var(--orange-d);color:#fff}
+.btn.ghost{background:#fff;color:var(--purple);border:1.5px solid var(--purple)}.btn.ghost:hover{background:var(--soft)}
+.btn.sm{padding:6px 12px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:15px}
+.check input{margin-top:5px;width:18px;height:18px;accent-color:var(--purple)}
+.note{font-size:14px;color:var(--muted);margin:8px 0 0}
+.msg{margin-top:14px;padding:11px 14px;border-radius:8px;font-size:14px;border:1px solid}
+.msg.err{background:#FDECEA;border-color:#F3B8B3;color:var(--err)}
+.msg.ok{background:#E8F5EC;border-color:#B6DDC2;color:var(--ok)}
+.msg.info{background:var(--soft);border-color:#D9CCFB;color:var(--purple-d)}
+.detect{font-size:14px;margin-top:6px;color:var(--purple-d);font-weight:600;min-height:21px}
+.linkrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.linkrow code{flex:1 1 260px;min-width:0;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:700;border:1.5px solid currentColor}
+.swatch{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:8px}
+table.teams{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+table.teams th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--line)}
+table.teams td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.teams .who{color:var(--muted);font-size:13px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.rooms{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.modal-bg{position:fixed;inset:0;background:rgba(27,21,48,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal{background:#fff;border-radius:12px;max-width:460px;width:100%;padding:24px}
+.modal h3{font-size:19px}
+.modal p{color:var(--muted)}
+.modal .actions{margin-top:18px;justify-content:flex-end}
+.teamband{border-radius:var(--radius);padding:18px 20px;margin-top:22px;border-left:10px solid}
+.teamband h2{font-size:24px;font-weight:800}
+.teamband p{margin:2px 0 0;color:var(--ink)}
+ul.sug{padding-left:20px;margin:10px 0 0}
+ul.sug li{margin:6px 0}
+.spin{display:inline-block;width:14px;height:14px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:8px}
+.spin.dark{border-color:rgba(107,33,245,.25);border-top-color:var(--purple)}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* Vista en vivo */
+.mon-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.seg{display:inline-flex;border:1.5px solid var(--purple);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:#fff;color:var(--purple);font:600 13px 'Open Sans',sans-serif;padding:7px 14px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--purple);color:#fff}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:6px}
+.dot.off{background:var(--err)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-top:18px}
+.tcard{border:1px solid var(--line);border-top:8px solid;border-radius:var(--radius);background:#fff;display:flex;flex-direction:column;min-width:0}
+.tcard.wide{grid-column:1/-1}
+.tcard .hd{padding:12px 16px 8px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.tcard .hd h3{font-size:17px;font-weight:700}
+.tcard .meta{font-size:12.5px;color:var(--muted);padding:0 16px 8px}
+.tcard .body{padding:6px 16px 16px;overflow:auto;max-height:420px;font-size:14.5px;border-top:1px solid var(--line)}
+.tcard.wide .body{max-height:72vh}
+.tcard.flash{animation:fl 1.4s ease-out}
+@keyframes fl{0%{box-shadow:0 0 0 4px var(--orange)}100%{box-shadow:0 0 0 0 rgba(255,107,26,0)}}
+.body .tpl{color:#8A8697}
+.body .nw{padding:1px 6px;border-radius:4px;display:inline}
+.body p{margin:8px 0}
+.body h4{margin:12px 0 4px;font-family:'Montserrat',sans-serif;font-size:15px}
+.body ul{margin:6px 0;padding-left:20px}
+.body table{border-collapse:collapse;width:100%;margin:8px 0;font-size:13px}
+.body td,.body th{border:1px solid var(--line);padding:4px 7px;vertical-align:top;text-align:left}
+.body .tabname{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-top:10px}
+.body .slide{border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin:8px 0}
+.body .slide b{font-size:12px;color:var(--muted)}
+.empty{color:var(--muted);font-style:italic}
+@media(max-width:640px){.page-title{font-size:24px}table.teams .hide-s{display:none}.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.tcard.flash,.spin{animation:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <span class="brand">Task <b>live</b></span>
+  <span class="by">Sintropía Social</span>
+  <span class="spacer"></span>
+  <span class="by" id="topRight"></span>
+</div></header>
+<main id="app" class="wrap"></main>
+
+<script>
+/* =====================================================================
+ *  CONFIGURACIÓN: pega aquí la URL del Web App de Apps Script (termina en /exec)
+ * ===================================================================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbwUVEiQeexN-TGzEW67s8rFKEj6Pz75l-f_8YHGwE1R7tdtal51o_5xwFW0IQBxx6Yo/exec';
+
+/* ---------- utilidades ---------- */
+const app = document.getElementById('app');
+const BASE = location.origin + location.pathname;
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  Object.entries(attrs || {}).forEach(([k, v]) => {
+    if (v == null || v === false) return;
+    if (k === 'class') el.className = v;
+    else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  });
+  kids.flat(Infinity).forEach(c => { if (c == null || c === false) return; el.append(c.nodeType ? c : document.createTextNode(String(c))); });
+  return el;
+}
+const clear = el => { while (el.firstChild) el.removeChild(el.firstChild); };
+const rule = () => h('div', { class: 'rule', 'aria-hidden': 'true' }, h('i'), h('i'), h('i'));
+
+async function api(action, data) {
+  if (API_URL.indexOf('PEGA_AQUI') === 0) throw new Error('Falta configurar API_URL en index.html (URL del Web App de Apps Script).');
+  let res;
+  try {
+    res = await fetch(API_URL, {
+      method: 'POST', redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action }, data || {}))
+    });
+  } catch (e) { throw new Error('No se pudo conectar con el servidor. Revisa tu conexión.'); }
+  let j;
+  try { j = await res.json(); } catch (e) { throw new Error('Respuesta inesperada del servidor.'); }
+  if (!j.ok) throw new Error(j.error || 'Error desconocido.');
+  return j;
+}
+
+const store = {
+  get(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  sget(k) { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } },
+  sset(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+};
+
+function copyText(text, btn) {
+  const done = () => { const old = btn.textContent; btn.textContent = 'Copiado'; setTimeout(() => { btn.textContent = old; }, 1400); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, () => fallback());
+  else fallback();
+  function fallback() {
+    const ta = h('textarea', { style: { position: 'fixed', opacity: 0 } }); ta.value = text; document.body.append(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {} ta.remove();
+  }
+}
+
+function linkRow(label, url, opts) {
+  opts = opts || {};
+  const btnCopy = h('button', { class: 'btn ghost sm', type: 'button' }, 'Copiar');
+  btnCopy.addEventListener('click', () => copyText(url, btnCopy));
+  return h('div', {},
+    label ? h('label', {}, label) : null,
+    h('div', { class: 'linkrow' },
+      h('code', { title: url }, url),
+      btnCopy,
+      h('a', { class: 'btn ghost sm', href: url, target: '_blank', rel: 'noopener noreferrer' }, opts.open || 'Abrir')));
+}
+
+function msg(kind, text) { return h('div', { class: 'msg ' + kind, role: kind === 'err' ? 'alert' : 'status' }, text); }
+function setMsg(box, kind, text) { clear(box); if (text) box.append(msg(kind, text)); }
+function busy(btn, on, text) {
+  if (on) { btn.dataset.t = btn.textContent; clear(btn); btn.append(h('span', { class: 'spin' }), text || 'Procesando…'); btn.disabled = true; }
+  else { btn.textContent = btn.dataset.t || btn.textContent; btn.disabled = false; }
+}
+const STATE_LABEL = { activo: 'Trabajando', finalizando: 'Finalizando', finalizado: 'Finalizado' };
+const teamUrl = k => BASE + '?v=team&t=' + encodeURIComponent(k);
+const monUrl = k => BASE + '?v=monitor&m=' + encodeURIComponent(k);
+
+function detectType(u) {
+  u = (u || '').trim();
+  if (/docs\.google\.com\/document\/(u\/\d+\/)?d\//.test(u)) return { t: 'doc', label: 'Documento de Google (Docs) detectado' };
+  if (/docs\.google\.com\/spreadsheets\/(u\/\d+\/)?d\//.test(u)) return { t: 'sheet', label: 'Hoja de cálculo de Google (Sheets) detectada' };
+  if (/docs\.google\.com\/presentation\/(u\/\d+\/)?d\//.test(u)) return { t: 'slides', label: 'Presentación de Google (Slides) detectada' };
+  if (/^https:\/\//i.test(u)) return { t: 'externo', label: 'Enlace externo: no se puede copiar automáticamente' };
+  return { t: '', label: '' };
+}
+
+/* =====================================================================
+ *  VISTA DEL FACILITADOR
+ * ===================================================================== */
+const adm = { key: '', room: null, timer: null, aiOn: true };
+
+function viewAdmin() {
+  document.title = 'Task live · Facilitación';
+  clear(app);
+  app.append(
+    h('h1', { class: 'page-title' }, 'Task live'), rule(),
+    h('p', { class: 'lead' }, 'Trabajo en vivo para videollamadas. Pega el enlace de un documento, indica cuántos equipos habrá y comparte un enlace por equipo.'),
+    h('div', { id: 'gate' }), h('div', { id: 'newRoom' }), h('div', { id: 'roomBox' }), h('div', { id: 'oldRooms' })
+  );
+  adm.key = store.sget('tl_admin');
+  if (adm.key) enterAdmin(); else renderGate();
+}
+
+function renderGate(err) {
+  const gate = $id('gate'); clear(gate);
+  const inp = h('input', { type: 'password', id: 'k', autocomplete: 'current-password', 'aria-describedby': 'kmsg' });
+  const out = h('div', { id: 'kmsg' });
+  const btn = h('button', { class: 'btn primary', type: 'submit' }, 'Entrar');
+  const form = h('form', { onsubmit: async e => {
+    e.preventDefault(); adm.key = inp.value.trim(); if (!adm.key) return;
+    busy(btn, true, 'Verificando…');
+    try { await api('listRooms', { adminKey: adm.key }); store.sset('tl_admin', adm.key); enterAdmin(); }
+    catch (ex) { setMsg(out, 'err', ex.message); busy(btn, false); }
+  } },
+    h('label', { for: 'k' }, 'Clave de facilitador'), inp, h('div', { style: { marginTop: '14px' } }, btn), out);
+  gate.append(h('section', { class: 'card' }, h('h2', {}, 'Acceso'), h('p', { class: 'sub' }, 'Solo quien facilita puede crear salas.'), form));
+  if (err) setMsg(out, 'err', err);
+}
+const $id = id => document.getElementById(id);
+
+async function enterAdmin() {
+  clear($id('gate'));
+  $id('topRight').textContent = '';
+  const out = h('a', { href: '#', class: 'by', onclick: e => { e.preventDefault(); store.sset('tl_admin', ''); adm.key = ''; clearInterval(adm.timer); viewAdmin(); } }, 'Cerrar acceso');
+  clear($id('topRight')); $id('topRight').append(out);
+  renderNewRoom();
+  try {
+    const r = await api('listRooms', { adminKey: adm.key });
+    renderOldRooms(r.rooms);
+  } catch (ex) { store.sset('tl_admin', ''); renderGate(ex.message); }
+}
+
+function renderNewRoom() {
+  const box = $id('newRoom'); clear(box);
+  const name = h('input', { type: 'text', id: 'rn', maxlength: '80', placeholder: 'Ej. Taller de diagnóstico, sesión 2' });
+  const url = h('input', { type: 'url', id: 'ru', placeholder: 'https://docs.google.com/document/d/…' });
+  const n = h('input', { type: 'number', id: 'rt', min: '1', max: '12', value: '4' });
+  const names = h('textarea', { id: 'rnames', placeholder: 'Uno por línea. Si lo dejas vacío se llamarán Equipo 1, Equipo 2…' });
+  const ext = h('textarea', { id: 'rext', placeholder: 'Un enlace por línea, uno por cada equipo' });
+  const detect = h('div', { class: 'detect', id: 'det', 'aria-live': 'polite' });
+  const extWrap = h('div', { style: { display: 'none' } },
+    h('label', { for: 'rext' }, 'Enlaces por equipo ', h('small', {}, '(este tipo de enlace no se puede copiar solo)')), ext,
+    h('p', { class: 'note' }, 'Tú preparas un documento por equipo y los pegas aquí. Task live registrará quién entra y mostrará el estado, pero no podrá leer ni fusionar su contenido.'));
+  url.addEventListener('input', () => {
+    const d = detectType(url.value); detect.textContent = d.label;
+    extWrap.style.display = d.t === 'externo' ? 'block' : 'none';
+  });
+  const out = h('div');
+  const btn = h('button', { class: 'btn primary', type: 'submit' }, 'Generar sala');
+  const form = h('form', { onsubmit: async e => {
+    e.preventDefault(); setMsg(out, '', '');
+    busy(btn, true, 'Creando copias… puede tardar un poco');
+    try {
+      const r = await api('createRoom', {
+        adminKey: adm.key, roomName: name.value, url: url.value.trim(), teams: Number(n.value),
+        teamNames: names.value.split('\n'), externalLinks: ext.value
+      });
+      showRoom(r);
+      const l = await api('listRooms', { adminKey: adm.key }); renderOldRooms(l.rooms);
+      setMsg(out, 'ok', 'Sala creada. Comparte los enlaces de abajo.');
+    } catch (ex) { setMsg(out, 'err', ex.message); }
+    busy(btn, false);
+  } },
+    h('label', { for: 'rn' }, 'Nombre de la sesión'), name,
+    h('label', { for: 'ru' }, 'Enlace del documento ', h('small', {}, '(Google Docs, Sheets o Slides)')), url, detect,
+    h('div', { class: 'row' },
+      h('div', {}, h('label', { for: 'rt' }, '¿Cuántos equipos se generarán?'), n),
+      h('div', {}, h('label', { for: 'rnames' }, 'Nombres de equipos ', h('small', {}, '(opcional)')), names)),
+    extWrap,
+    h('p', { class: 'note' }, 'Task live hace una copia editable del documento por cada equipo. El documento que pegaste queda como documento central: ahí se reunirá el trabajo al finalizar. La cuenta de Google que publicó el script debe poder editarlo.'),
+    h('div', { style: { marginTop: '16px' } }, btn), out);
+  box.append(h('section', { class: 'card' }, h('h2', {}, 'Nueva sesión'), h('p', { class: 'sub' }, 'Genera una sala con un enlace por equipo.'), form));
+}
+
+function renderOldRooms(rooms) {
+  const box = $id('oldRooms'); clear(box);
+  if (!rooms || !rooms.length) return;
+  const list = h('div', { class: 'rooms' });
+  rooms.forEach(r => {
+    const b = h('button', { class: 'btn ghost sm', type: 'button' }, r.nombre + ' · ' + r.equipos + ' equipos · ' + String(r.creada).slice(0, 10));
+    b.addEventListener('click', async () => {
+      try { showRoom(await api('getRoom', { adminKey: adm.key, roomId: r.roomId })); window.scrollTo({ top: $id('roomBox').offsetTop - 70, behavior: 'smooth' }); }
+      catch (ex) { box.prepend(msg('err', ex.message)); }
+    });
+    list.append(b);
+  });
+  box.append(h('section', { class: 'card' }, h('h2', {}, 'Sesiones anteriores'), list));
+}
+
+function showRoom(data) {
+  adm.room = data;
+  renderRoom();
+  clearInterval(adm.timer);
+  adm.timer = setInterval(async () => {
+    if (document.hidden || adm.busyAny || !adm.room) return;
+    try { adm.room = await api('getRoom', { adminKey: adm.key, roomId: adm.room.room.roomId }); renderRoom(); } catch (e) {}
+  }, 15000);
+}
+
+function renderRoom() {
+  const d = adm.room; const box = $id('roomBox'); clear(box);
+  const aiChk = h('input', { type: 'checkbox', id: 'aiall' });
+  aiChk.checked = adm.aiOn && d.aiConfigured; aiChk.disabled = !d.aiConfigured;
+  aiChk.addEventListener('change', () => { adm.aiOn = aiChk.checked; });
+  const pending = d.teams.filter(t => t.estado === 'activo');
+  const btnAll = h('button', { class: 'btn act', type: 'button' }, 'Finalizar todos los pendientes (' + pending.length + ')');
+  btnAll.disabled = !pending.length;
+  btnAll.addEventListener('click', () => confirmModal(
+    'Finalizar todos los pendientes',
+    'Se enviará el trabajo de ' + pending.length + ' equipo(s) al documento central, uno por uno. Sus copias quedarán en solo lectura.',
+    'Sí, finalizar todos',
+    async () => {
+      adm.busyAny = true;
+      const errs = [];
+      let i = 0;
+      for (const t of pending) {
+        i++; busy(btnAll, true, 'Finalizando equipo ' + t.n + ' (' + i + ' de ' + pending.length + ')…');
+        try { await api('finalize', { adminKey: adm.key, roomId: d.room.roomId, team: t.n, useAI: aiChk.checked }); }
+        catch (ex) { errs.push('Equipo ' + t.n + ': ' + ex.message); }
+      }
+      adm.busyAny = false;
+      try { adm.room = await api('getRoom', { adminKey: adm.key, roomId: d.room.roomId }); renderRoom(); } catch (e) {}
+      if (errs.length) setMsg($id('roomMsg'), 'err', errs.join(' · '));
+    }));
+
+  const rows = d.teams.map(t => {
+    const bFin = h('button', { class: 'btn act sm', type: 'button' }, 'Finalizar');
+    bFin.disabled = t.estado !== 'activo';
+    bFin.addEventListener('click', async () => {
+      adm.busyAny = true; busy(bFin, true, 'Finalizando…');
+      let err = '';
+      try { await api('finalize', { adminKey: adm.key, roomId: d.room.roomId, team: t.n, useAI: aiChk.checked }); }
+      catch (ex) { err = 'Equipo ' + t.n + ': ' + ex.message; }
+      adm.busyAny = false;
+      try { adm.room = await api('getRoom', { adminKey: adm.key, roomId: d.room.roomId }); renderRoom(); } catch (e) {}
+      if (err) setMsg($id('roomMsg'), 'err', err);
+    });
+    const bRe = h('button', { class: 'btn ghost sm', type: 'button' }, 'Reabrir');
+    bRe.style.display = t.estado === 'finalizado' ? '' : 'none';
+    bRe.addEventListener('click', () => confirmModal(
+      'Reabrir ' + t.nombre,
+      'La copia del equipo vuelve a modo edición. Si vuelven a finalizar, su contenido se agregará otra vez al documento central.',
+      'Sí, reabrir',
+      async () => {
+        try { adm.room = await api('reopen', { adminKey: adm.key, roomId: d.room.roomId, team: t.n }); renderRoom(); }
+        catch (ex) { setMsg($id('roomMsg'), 'err', ex.message); }
+      }));
+    const bCopy = h('button', { class: 'btn ghost sm', type: 'button' }, 'Copiar enlace');
+    bCopy.addEventListener('click', () => copyText(teamUrl(t.teamKey), bCopy));
+    return h('tr', {},
+      h('td', {}, h('span', { class: 'swatch', style: { background: t.color.texto } }), h('b', {}, t.nombre), h('div', { class: 'who' }, t.color.nombre)),
+      h('td', {}, h('span', { class: 'chip', style: { color: t.estado === 'finalizado' ? 'var(--ok)' : 'var(--purple)' } }, STATE_LABEL[t.estado] || t.estado),
+        t.resumen ? h('div', { class: 'who' }, t.resumen) : null),
+      h('td', { class: 'hide-s' }, t.integrantes.length ? t.integrantes.join(', ') : h('span', { class: 'who' }, 'Nadie ha entrado')),
+      h('td', {}, h('div', { class: 'actions' }, bCopy,
+        h('a', { class: 'btn ghost sm', href: teamUrl(t.teamKey), target: '_blank', rel: 'noopener noreferrer' }, 'Abrir'), bFin, bRe)));
+  });
+
+  box.append(h('section', { class: 'card' },
+    h('h2', {}, d.room.nombre), h('p', { class: 'sub' }, d.room.tipoEtiqueta + ' · creada ' + d.room.creada),
+    linkRow('Vista en vivo (solo lectura, para proyectar o compartir)', monUrl(d.room.viewKey), { open: 'Abrir vista' }),
+    linkRow('Documento central (aquí se reúne el trabajo al finalizar)', d.room.centralUrl),
+    d.repoUrl ? linkRow('Repositorio de asistentes y finalizaciones (Sheets de Sintropía)', d.repoUrl) : null),
+    h('section', { class: 'card' },
+      h('h2', {}, 'Enlaces por equipo'),
+      h('p', { class: 'sub' }, 'Cada equipo recibe solo su enlace. Al entrar deja su nombre y correo, y desde ahí abre su documento y finaliza.'),
+      h('div', { style: { overflowX: 'auto' } }, h('table', { class: 'teams' },
+        h('thead', {}, h('tr', {}, h('th', {}, 'Equipo'), h('th', {}, 'Estado'), h('th', { class: 'hide-s' }, 'Integrantes'), h('th', {}, 'Acciones'))),
+        h('tbody', {}, rows))),
+      h('div', { class: 'check' }, aiChk, h('label', { for: 'aiall', style: { margin: 0, fontWeight: 400 } },
+        d.aiConfigured ? 'Usar IA al finalizar (corrige ortografía y genera sugerencias antes de escribir en el central)' : 'IA no configurada en el servidor: se enviará el texto sin revisar')),
+      h('div', { style: { marginTop: '16px' } }, btnAll), h('div', { id: 'roomMsg' })));
+}
+
+/* =====================================================================
+ *  VISTA DEL EQUIPO
+ * ===================================================================== */
+async function viewTeam(key) {
+  clear(app);
+  document.title = 'Task live · Equipo';
+  const holder = h('div', {}, h('p', { class: 'lead', style: { marginTop: '40px' } }, h('span', { class: 'spin dark' }), 'Cargando…'));
+  app.classList.add('narrow'); app.append(holder);
+  let info;
+  try { info = await api('teamInfo', { t: key }); }
+  catch (ex) { clear(holder); holder.append(h('h1', { class: 'page-title' }, 'Enlace no disponible'), rule(), msg('err', ex.message)); return; }
+  document.title = 'Task live · ' + info.nombreEquipo;
+  clear(holder);
+  const c = info.color;
+  holder.append(
+    h('div', { class: 'teamband', style: { borderColor: c.texto, background: c.fondo } },
+      h('div', { class: 'by' }, info.sala),
+      h('h2', { style: { color: c.texto } }, info.nombreEquipo),
+      h('p', {}, 'Color de tu equipo: ' + c.nombre + '. Así se verá su trabajo en el documento central.')));
+  const panel = h('div'); holder.append(panel);
+  if (info.estado === 'finalizado') return renderTeamDone(panel, info, null);
+  if (info.estado === 'finalizando') { panel.append(section('Tu equipo se está finalizando', 'Otro integrante ya presionó Finalizar. Espera un momento y vuelve a cargar esta página.')); return; }
+  renderTeamJoin(panel, key, info);
+}
+
+function section(title, sub, ...kids) { return h('section', { class: 'card' }, h('h2', {}, title), sub ? h('p', { class: 'sub' }, sub) : null, ...kids); }
+
+function renderTeamJoin(panel, key, info) {
+  clear(panel);
+  const name = h('input', { type: 'text', id: 'nm', maxlength: '80', autocomplete: 'name', required: true });
+  const mail = h('input', { type: 'email', id: 'em', maxlength: '120', autocomplete: 'email', required: true });
+  name.value = store.get('tl_name'); mail.value = store.get('tl_email');
+  const out = h('div');
+  const btn = h('button', { class: 'btn primary', type: 'submit' }, 'Entrar al documento');
+  const form = h('form', { onsubmit: async e => {
+    e.preventDefault();
+    const win = window.open('', '_blank');           // se abre en el clic para que no lo bloquee el navegador
+    busy(btn, true, 'Registrando…');
+    try {
+      const r = await api('register', { t: key, name: name.value, email: mail.value });
+      store.set('tl_name', name.value.trim()); store.set('tl_email', mail.value.trim());
+      if (win) win.location.href = r.url;
+      renderTeamWork(panel, key, info, r.url, !!win);
+    } catch (ex) { if (win) win.close(); setMsg(out, 'err', ex.message); busy(btn, false); }
+  } },
+    h('label', { for: 'nm' }, 'Tu nombre'), name,
+    h('label', { for: 'em' }, 'Tu correo'), mail,
+    h('p', { class: 'note' }, 'Se guarda en el registro de la sesión para saber quién participó en este equipo.'),
+    h('div', { style: { marginTop: '16px' } }, btn), out);
+  panel.append(section('Antes de entrar', 'Escribe tus datos y se abrirá el documento de tu equipo en otra pestaña.', form));
+}
+
+function renderTeamWork(panel, key, info, docUrl, opened) {
+  clear(panel);
+  const ai = h('input', { type: 'checkbox', id: 'ai' });
+  ai.checked = !!info.aiConfigured; ai.disabled = !info.aiConfigured;
+  const out = h('div');
+  const btn = h('button', { class: 'btn act', type: 'button' }, 'Finalizar trabajo del equipo');
+  btn.addEventListener('click', () => confirmModal(
+    'Finalizar el trabajo de ' + info.nombreEquipo,
+    'Se enviará lo que escribió el equipo al documento central' + (ai.checked ? ', antes se revisará la ortografía y se generarán sugerencias' : '') + '. Después su documento quedará en solo lectura. Asegúrense de que todos terminaron.',
+    'Sí, finalizar',
+    async () => {
+      const t0 = Date.now();
+      const timer = setInterval(() => { const s = Math.round((Date.now() - t0) / 1000); btn.lastChild.textContent = 'Enviando al documento central… ' + s + ' s'; }, 1000);
+      busy(btn, true, 'Enviando al documento central… 0 s');
+      try {
+        const r = await api('finalize', { t: key, useAI: ai.checked });
+        clearInterval(timer); renderTeamDone(panel, info, r.resumen);
+      } catch (ex) { clearInterval(timer); busy(btn, false); setMsg(out, 'err', ex.message); }
+    }));
+  panel.append(
+    section('Tu documento', opened ? 'Se abrió en otra pestaña. Si no lo ves, usa el botón.' : 'Tu navegador bloqueó la pestaña nueva. Usa el botón para abrirlo.',
+      h('div', {}, h('a', { class: 'btn primary', href: docUrl, target: '_blank', rel: 'noopener noreferrer' }, 'Abrir el documento'))),
+    section('Cuando terminen', 'Cualquier integrante puede finalizar. Mantengan esta página abierta.',
+      h('div', { class: 'check' }, ai, h('label', { for: 'ai', style: { margin: 0, fontWeight: 400 } },
+        info.aiConfigured ? 'Revisar ortografía y generar sugerencias con IA antes de enviar' : 'IA no configurada: se enviará el texto tal como está')),
+      h('p', { class: 'note' }, 'Con IA puede tardar hasta un par de minutos si el trabajo es largo.'),
+      h('div', { style: { marginTop: '16px' } }, btn), out));
+}
+
+function renderTeamDone(panel, info, r) {
+  clear(panel);
+  const body = [];
+  if (r) {
+    body.push(msg(r.escrito ? 'ok' : 'info', r.escrito
+      ? 'Listo. El trabajo de tu equipo ya está en el documento central' + (r.ia ? ', con la ortografía revisada.' : '.')
+      : (r.notas && r.notas[0]) || 'Equipo marcado como finalizado.'));
+    if (r.escrito) body.push(h('p', { class: 'note' }, 'Fragmentos nuevos: ' + r.unidades + (r.ia ? ' · corregidos: ' + r.cambios : '')));
+    if (r.sugerencias && r.sugerencias.length) body.push(h('h3', { style: { marginTop: '18px', fontSize: '16px' } }, 'Sugerencias de la IA'), h('ul', { class: 'sug' }, r.sugerencias.map(s => h('li', {}, s))));
+    if (r.notas && r.notas.length && r.escrito) body.push(h('p', { class: 'note' }, 'Notas: ' + r.notas.join(' ')));
+  } else {
+    body.push(msg('info', 'Este equipo ya fue finalizado.' + (info.resumen ? ' ' + info.resumen : '')));
+  }
+  panel.append(section('Equipo finalizado', null, ...body));
+}
+
+function confirmModal(title, text, okLabel, onOk) {
+  const prev = document.activeElement;
+  const cancel = h('button', { class: 'btn ghost', type: 'button' }, 'Cancelar');
+  const ok = h('button', { class: 'btn act', type: 'button' }, okLabel);
+  const bg = h('div', { class: 'modal-bg', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'mt' },
+    h('div', { class: 'modal' }, h('h3', { id: 'mt' }, title), h('p', {}, text), h('div', { class: 'actions' }, cancel, ok)));
+  const close = () => { bg.remove(); document.removeEventListener('keydown', esc); if (prev) prev.focus(); };
+  const esc = e => { if (e.key === 'Escape') close(); };
+  cancel.addEventListener('click', close);
+  ok.addEventListener('click', () => { close(); onOk(); });
+  document.addEventListener('keydown', esc);
+  document.body.append(bg); cancel.focus();
+}
+
+/* =====================================================================
+ *  VISTA EN VIVO (solo lectura)
+ * ===================================================================== */
+const mon = { key: '', data: null, last: {}, onlyNew: true, wide: null, timer: null, fails: 0 };
+
+function viewMonitor(key) {
+  mon.key = key; clear(app);
+  document.title = 'Task live · Vista en vivo';
+  const status = h('span', { class: 'by', id: 'mstat', 'aria-live': 'polite' }, 'Conectando…');
+  const seg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Qué mostrar' },
+    h('button', { type: 'button', 'aria-pressed': 'true', id: 'sNew' }, 'Solo lo escrito por los equipos'),
+    h('button', { type: 'button', 'aria-pressed': 'false', id: 'sAll' }, 'Documento completo'));
+  app.append(
+    h('h1', { class: 'page-title', id: 'mtitle' }, 'Vista en vivo'), rule(),
+    h('p', { class: 'lead' }, 'Solo lectura. Se actualiza sola cada pocos segundos.'),
+    h('div', { class: 'mon-bar' }, seg, status),
+    h('div', { class: 'grid', id: 'grid' }));
+  const setMode = onlyNew => { mon.onlyNew = onlyNew; $id('sNew').setAttribute('aria-pressed', String(onlyNew)); $id('sAll').setAttribute('aria-pressed', String(!onlyNew)); renderMonitor(false); };
+  $id('sNew').addEventListener('click', () => setMode(true));
+  $id('sAll').addEventListener('click', () => setMode(false));
+  pollMonitor();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) pollMonitor(); });
+}
+
+async function pollMonitor() {
+  clearTimeout(mon.timer);
+  if (document.hidden) { mon.timer = setTimeout(pollMonitor, 4000); return; }
+  const st = $id('mstat');
+  try {
+    mon.data = await api('monitor', { m: mon.key });
+    mon.fails = 0;
+    st.textContent = ''; st.append(h('span', { class: 'dot' }), 'En vivo · ' + new Date().toLocaleTimeString('es-MX'));
+    renderMonitor(true);
+  } catch (ex) {
+    mon.fails++;
+    st.textContent = ''; st.append(h('span', { class: 'dot off' }), ex.message);
+    if (/no válido/i.test(ex.message)) return;
+  }
+  mon.timer = setTimeout(pollMonitor, Math.min(8000 + mon.fails * 4000, 30000));
+}
+
+function ago(ts) {
+  if (!ts) return 'sin datos';
+  const s = Math.max(0, Math.round((Date.now() - ts) / 1000));
+  if (s < 10) return 'hace unos segundos';
+  if (s < 60) return 'hace ' + s + ' s';
+  if (s < 3600) return 'hace ' + Math.round(s / 60) + ' min';
+  return 'hace ' + Math.round(s / 3600) + ' h';
+}
+
+function renderMonitor(flash) {
+  const d = mon.data; if (!d) return;
+  $id('mtitle').textContent = d.sala; document.title = 'Task live · ' + d.sala;
+  const grid = $id('grid'); clear(grid);
+  d.teams.forEach(t => {
+    const changed = flash && mon.last[t.n] !== undefined && mon.last[t.n] !== t.actualizado;
+    mon.last[t.n] = t.actualizado;
+    const wideBtn = h('button', { class: 'btn ghost sm', type: 'button' }, mon.wide === t.n ? 'Reducir' : 'Ampliar');
+    const card = h('article', { class: 'tcard' + (mon.wide === t.n ? ' wide' : '') + (changed ? ' flash' : ''), style: { borderTopColor: t.color.texto } },
+      h('div', { class: 'hd' },
+        h('h3', { style: { color: t.color.texto } }, t.nombre),
+        h('div', { class: 'actions' }, h('span', { class: 'chip', style: { color: t.estado === 'finalizado' ? 'var(--ok)' : t.color.texto } }, STATE_LABEL[t.estado] || t.estado), wideBtn)),
+      h('div', { class: 'meta' }, 'Actualizado ' + ago(t.actualizado) + ' · ' + (t.integrantes.length ? t.integrantes.join(', ') : 'nadie ha entrado')),
+      h('div', { class: 'body' }, renderContent(t)));
+    wideBtn.addEventListener('click', () => { mon.wide = mon.wide === t.n ? null : t.n; renderMonitor(false); });
+    grid.append(card);
+  });
+}
+
+function renderContent(t) {
+  const c = t.contenido || {};
+  const col = { color: t.color.texto, background: t.color.fondo };
+  if (c.error) return h('p', { class: 'empty' }, c.error);
+  if (c.type === 'externo') return h('p', { class: 'empty' }, 'Enlace externo: el contenido no se puede mostrar aquí.');
+  const only = mon.onlyNew;
+  const out = [];
+  if (c.type === 'doc') {
+    (c.items || []).forEach(it => {
+      if (only && !it.n) return;
+      const cls = it.n ? 'nw' : 'tpl';
+      const sty = it.n ? col : null;
+      if (it.k === 't') {
+        out.push(h('table', {}, h('tbody', {}, it.r.map((row, r) => h('tr', {}, row.map((cell, ci) => {
+          const isNew = it.c && it.c[r] && it.c[r][ci];
+          return h('td', { class: isNew ? '' : 'tpl', style: isNew ? col : null }, cell);
+        }))))));
+      } else if (it.k === 'li') {
+        out.push(h('ul', { style: { marginLeft: (Number(it.l) || 0) * 18 + 'px' } }, h('li', {}, h('span', { class: cls, style: sty }, it.t))));
+      } else if (/^(TITLE|H\d)$/.test(it.h)) {
+        out.push(h('h4', {}, h('span', { class: cls, style: sty }, it.t)));
+      } else {
+        out.push(h('p', {}, h('span', { class: cls, style: sty }, it.t)));
+      }
+    });
+    if (c.cut) out.push(h('p', { class: 'empty' }, 'El documento es largo; se muestra solo el inicio.'));
+  } else if (c.type === 'sheet') {
+    (c.tabs || []).forEach(tab => {
+      const rows = tab.v.map((row, r) => ({ row, r })).filter(x => !only || (tab.nw[x.r] || []).some(Boolean));
+      if (only && !rows.length) return;
+      out.push(h('div', { class: 'tabname' }, tab.name));
+      out.push(h('table', {}, h('tbody', {}, rows.map(x => h('tr', {}, x.row.map((cell, ci) => {
+        const isNew = tab.nw[x.r] && tab.nw[x.r][ci];
+        return h('td', { class: isNew ? '' : 'tpl', style: isNew ? col : null }, cell);
+      }))))));
+      if (tab.more) out.push(h('p', { class: 'empty' }, 'Hay más filas; se muestran las primeras.'));
+    });
+  } else if (c.type === 'slides') {
+    (c.slides || []).forEach(s => {
+      if (only && !s.n) return;
+      out.push(h('div', { class: 'slide', style: s.n ? { borderColor: t.color.texto } : null },
+        h('b', {}, 'Diapositiva ' + (s.i + 1)),
+        s.t.length ? s.t.map(x => h('p', { class: s.n ? 'nw' : 'tpl', style: s.n ? col : null }, x)) : h('p', { class: 'empty' }, 'Sin texto')));
+    });
+  }
+  return out.length ? out : h('p', { class: 'empty' }, only ? 'Aún no hay contenido nuevo.' : 'Documento vacío.');
+}
+
+/* =====================================================================
+ *  ARRANQUE
+ * ===================================================================== */
+(function start() {
+  const qs = new URLSearchParams(location.search);
+  const v = qs.get('v') || (qs.get('t') ? 'team' : qs.get('m') ? 'monitor' : 'admin');
+  if (v === 'team' && qs.get('t')) { app.classList.add('narrow'); viewTeam(qs.get('t')); }
+  else if (v === 'monitor' && qs.get('m')) viewMonitor(qs.get('m'));
+  else viewAdmin();
+})();
+function $(s, r) { return (r || document).querySelector(s); }
+</script>
+</body>
+</html>
