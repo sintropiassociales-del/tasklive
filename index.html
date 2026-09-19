@@ -334,7 +334,7 @@ function renderCreated(r, base, panel) {
       h('ol', { class: 'steps' },
         h('li', {}, 'Cada equipo abre su copia y trabaja en ella, en vivo.'),
         h('li', {}, 'Cuando un equipo pulsa "Finalizar" deja su nombre, correo y organización. Se revisa la ortografía con IA y el trabajo se escribe en tu documento con el color del equipo.'),
-        h('li', {}, 'Cada persona que finaliza recibe por correo el enlace de tu documento y recomendaciones de Sintropía Social.'))),
+        h('li', {}, 'Cada persona que finaliza recibe por correo el enlace de tu documento, el resultado de su equipo en PDF y en un documento editable, y la lectura con recomendaciones de Sintropía Social.'))),
     h('p', {}, h('a', { class: 'btn ghost', href: './' }, 'Crear otra sala')));
 }
 
@@ -418,7 +418,7 @@ function renderFinalize(room, team, box) {
   const openForm = h('button', { class: 'btn act', type: 'button' }, done ? 'Recibir el resultado' : 'Finalizar y recibir el resultado');
   const formBox = h('div');
   add(card, h('h2', {}, done ? 'Recibir el resultado' : 'Cuando terminen'),
-    h('p', { class: 'sub' }, done ? 'El trabajo de tu equipo ya se reunió en el documento de la sala.' : 'Al finalizar, se revisa la ortografía con IA, el trabajo de tu equipo se escribe en el documento de la sala con tu color y recibes por correo recomendaciones de Sintropía Social.'),
+    h('p', { class: 'sub' }, done ? 'El trabajo de tu equipo ya se reunió en el documento de la sala.' : 'Al finalizar, se revisa la ortografía con IA, el trabajo de tu equipo se escribe en el documento de la sala con tu color y recibes por correo el resultado en PDF y en un documento editable, con la lectura y las recomendaciones de Sintropía Social.'),
     done ? null : h('div', { class: 'callout warn' }, h('b', {}, 'Avisa a tu equipo antes. '), 'Al finalizar, el documento de tu equipo queda en solo lectura.'),
     h('div', { style: { marginTop: '14px' } }, openForm), formBox);
   add(box, card);
