@@ -36,6 +36,8 @@ header.top .in{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;ali
 section.card,.card{border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-top:20px;background:#fff}
 .card h2{font-size:19px;font-weight:700}
 .card h3{font-size:16px;font-weight:700}
+.card.privacy{border-left:4px solid var(--purple);background:#F6F3FF}
+.card.privacy p{margin:8px 0 0;font-size:14.5px;line-height:1.55}
 .card .sub{color:var(--muted);font-size:14px;margin:4px 0 14px}
 label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
 label small{font-weight:400;color:var(--muted)}
@@ -304,8 +306,12 @@ function viewHome() {
   add(app,
     h('h1', { class: 'page-title' }, 'Task live'), rule(),
     h('p', { class: 'lead' }, 'Una sala de trabajo para videollamadas. Pega el enlace de tu documento, indica cuántos equipos habrá y comparte un enlace por equipo. Cada equipo trabaja en su copia y, al terminar, el resultado se reúne en tu documento.'),
+    h('section', { class: 'card privacy', 'aria-label': 'Privacidad y uso de la información' }, h('h2', {}, 'Privacidad y uso de la información'),
+      h('p', {}, 'En Sintropía Social no conservamos el contenido de los documentos que compartes en Task live. Para que los equipos puedan trabajar, la plataforma genera copias temporales; una vez que enviamos tu correo de cierre con el resultado, eliminamos esas copias y los archivos generados, y borramos tu nombre y tu correo de nuestros registros.'),
+      h('p', {}, 'Solo guardamos estadísticas de uso, sin datos personales ni contenido: número de sesiones, de equipos y de organizaciones participantes. Tu documento original es tuyo y nunca se elimina.'),
+      h('p', { class: 'note' }, 'El texto de cada equipo se procesa con un servicio de inteligencia artificial únicamente para corregir la ortografía y redactar las recomendaciones que se envían por correo. Si el resultado no pudiera escribirse en tu documento original, la copia del equipo se conserva unos días para que no se pierda el trabajo y después también se elimina.')),
     h('section', { class: 'card' }, h('h2', {}, 'Crear una sala'), h('p', { class: 'sub' }, 'No necesitas cuenta ni clave.'), form,
-      h('p', { class: 'note' }, 'Task live guarda una copia del documento de cada equipo durante 30 días. Las personas que pulsan "Finalizar" dejan su nombre, correo y organización, que se guardan para enviarles el resultado y para estadística. El texto que escriben los equipos se procesa con un servicio de IA para corregir ortografía y redactar recomendaciones.')),
+      null),
     recent.length ? h('section', { class: 'card' }, h('h2', {}, 'Mis salas en este navegador'),
       h('table', { class: 't' }, h('tbody', {}, recent.map(r => h('tr', {}, h('td', {}, h('b', {}, r.name), h('div', { class: 'who' }, r.at)),
         h('td', { style: { textAlign: 'right' } }, h('a', { class: 'btn ghost sm', href: r.panel }, 'Abrir panel'))))))) : null);
@@ -327,14 +333,15 @@ function renderCreated(r, base, panel) {
       linkRow(many ? 'Enlace general (cada persona elige su equipo)' : null, base),
       many ? h('table', { class: 't' }, h('thead', {}, h('tr', {}, h('th', {}, 'Equipo'), h('th', {}, 'Enlace'))), h('tbody', {}, rows)) : null),
     h('section', { class: 'card' }, h('h2', {}, 'Tu panel de facilitación'),
-      h('p', { class: 'sub' }, 'Ahí ves el estado de cada equipo, abres sus copias, ves quién finalizó y descargas la lista (nombre, correo y organización).'),
+      h('p', { class: 'sub' }, 'Ahí ves el estado de cada equipo, abres sus copias y ves quién finalizó. Por privacidad, poco después de enviar cada correo se eliminan las copias y se borran nombres y correos: si necesitas la lista (nombre, correo y organización), descárgala antes.'),
       linkRow(null, panel, 'Abrir panel'),
       h('div', { class: 'callout warn' }, h('b', {}, 'Guárdalo y no lo compartas. '), 'Quien tenga este enlace ve los correos de tu sala. También queda en "Mis salas" de este navegador.')),
     h('section', { class: 'card' }, h('h2', {}, 'Qué pasa después'),
       h('ol', { class: 'steps' },
         h('li', {}, 'Cada equipo abre su copia y trabaja en ella, en vivo.'),
         h('li', {}, 'Cuando un equipo pulsa "Finalizar" deja su nombre, correo y organización. Se revisa la ortografía con IA y el trabajo se escribe en tu documento con el color del equipo.'),
-        h('li', {}, 'Cada persona que finaliza recibe por correo el enlace de tu documento, el resultado de su equipo en PDF y en un documento editable, y la lectura con recomendaciones de Sintropía Social.'))),
+        h('li', {}, 'Cada persona que finaliza recibe por correo el enlace de tu documento, el resultado de su equipo en PDF y en un documento editable, y la lectura con recomendaciones de Sintropía Social.'),
+        h('li', {}, 'Poco después de enviar los correos, Task live elimina las copias de cada equipo y los datos personales. Tu documento original se conserva.'))),
     h('p', {}, h('a', { class: 'btn ghost', href: './' }, 'Crear otra sala')));
 }
 
@@ -349,7 +356,7 @@ async function viewRoom(rid, teamParam) {
   let room;
   try { room = await apiRetry('room', { rid }); } catch (ex) { return showError('No se pudo abrir la sala', ex.message); }
   document.title = 'Task live · ' + room.nombre;
-  if (room.archivada) return showError('Sala archivada', 'Esta sala ya se archivó. Las copias de trabajo se conservan 30 días. Pide un enlace nuevo a quien facilita.');
+  if (room.archivada) return showError('Sala archivada', 'Esta sala ya terminó y sus copias de trabajo se eliminaron por privacidad. Si necesitas volver a trabajar, pide a quien facilita que cree una sala nueva.');
   let n = teamParam || Number(store.sget(teamKey(rid))) || 0;
   if (!room.teams.some(t => t.n === n)) n = room.teams.length === 1 ? 1 : 0;
   if (n) return chooseTeam(room, n); else renderPick(room);
@@ -398,8 +405,8 @@ function renderWork(room, team) {
       h('div', {},
         h('section', { class: 'card' }, h('h2', {}, 'Documento de trabajo'),
           h('p', { class: 'sub' }, KIND_LABEL[room.tipo] || 'Documento'),
-          !google ? h('div', { class: 'callout warn' }, h('b', {}, 'Este enlace no es de Google. '), 'Ábrelo solo si confías en quien creó la sala.') : null,
-          tipsEnd ? h('div', { class: 'callout warn' }, h('b', {}, 'Tu equipo ya fue finalizado. '), 'Su documento está en solo lectura. Si aún no recibiste el resultado, deja tus datos a la derecha.') : null,
+          url && !google ? h('div', { class: 'callout warn' }, h('b', {}, 'Este enlace no es de Google. '), 'Ábrelo solo si confías en quien creó la sala.') : null,
+          tipsEnd ? h('div', { class: 'callout warn' }, h('b', {}, 'Tu equipo ya fue finalizado. '), url ? 'Su documento está en solo lectura. Si aún no recibiste el resultado, deja tus datos a la derecha.' : 'Su copia de trabajo se eliminó por privacidad. Si aún no recibiste el resultado, deja tus datos a la derecha y te enviamos el enlace del documento de la sala.') : null,
           h('div', { class: 'docbtns' }, url ? openBtn : null, google ? embBtn : null), embedBox),
         h('section', { class: 'card' }, h('h3', {}, 'Cómo trabajar en simultáneo'),
           h('ol', { class: 'tips' },
@@ -448,7 +455,7 @@ function renderFinalize(room, team, box) {
     } },
       h('label', { for: 'fn' }, 'Tu nombre'), name, h('label', { for: 'fe' }, 'Tu correo'), mail, h('label', { for: 'fo' }, 'Tu organización'), org,
       h('div', { class: 'hp', 'aria-hidden': 'true' }, h('label', { for: 'hp' }, 'No llenar'), hp),
-      h('div', { class: 'check' }, consent, h('label', { for: 'fc' }, 'Autorizo que Sintropía Social guarde mi nombre, correo y organización para enviarme este resultado y para fines de estadística, y que el texto de mi equipo se procese con un servicio de IA para corregir la ortografía y redactar recomendaciones. ',
+      h('div', { class: 'check' }, consent, h('label', { for: 'fc' }, 'Autorizo que Sintropía Social use mi nombre, correo y organización para enviarme este resultado, y que el texto de mi equipo se procese con un servicio de IA para corregir la ortografía y redactar recomendaciones. Entiendo que después de enviarme el correo se eliminan las copias de trabajo y mi nombre y correo, y que solo se conservan estadísticas sin datos personales. ',
         PRIVACY_URL ? h('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer' }, 'Aviso de privacidad') : null)),
       h('div', { style: { marginTop: '16px' } }, btn), out);
     add(formBox, form); name.focus();
@@ -531,8 +538,8 @@ function viewPanel(rid, fk) {
     clear(teamBox);
     add(teamBox, h('div', { style: { overflowX: 'auto' } }, h('table', { class: 't' }, h('thead', {}, h('tr', {}, ['Equipo', 'Estado', 'Personas', 'Resultado', ''].map(x => h('th', {}, x)))),
       h('tbody', {}, r.teams.map(t => {
-        const act = h('div', { class: 'actions' }, h('a', { class: 'btn ghost sm', href: safeUrl(t.copyUrl) || '#', target: '_blank', rel: 'noopener noreferrer' }, 'Abrir copia'));
-        if (t.estado === 'finalizado' || t.estado === 'procesando') {
+        const act = h('div', { class: 'actions' }, safeUrl(t.copyUrl) ? h('a', { class: 'btn ghost sm', href: safeUrl(t.copyUrl), target: '_blank', rel: 'noopener noreferrer' }, 'Abrir copia') : h('span', { class: 'by' }, 'Copia eliminada'));
+        if (safeUrl(t.copyUrl) && (t.estado === 'finalizado' || t.estado === 'procesando')) {
           const rb = h('button', { class: 'btn ghost sm', type: 'button' }, confirming === t.n ? 'Confirmar: reabrir' : 'Reabrir');
           rb.addEventListener('click', async () => {
             if (confirming !== t.n) { confirming = t.n; paint(); return; }
