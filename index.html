@@ -307,8 +307,8 @@ function viewHome() {
     h('h1', { class: 'page-title' }, 'Task live'), rule(),
     h('p', { class: 'lead' }, 'Una sala de trabajo para videollamadas. Pega el enlace de tu documento, indica cuántos equipos habrá y comparte un enlace por equipo. Cada equipo trabaja en su copia y, al terminar, el resultado se reúne en tu documento.'),
     h('section', { class: 'card privacy', 'aria-label': 'Privacidad y uso de la información' }, h('h2', {}, 'Privacidad y uso de la información'),
-      h('p', {}, 'En Sintropía Social no conservamos el contenido de los documentos que compartes en Task live. Para que los equipos puedan trabajar, la plataforma genera copias temporales; una vez que enviamos tu correo de cierre con el resultado, eliminamos esas copias y los archivos generados, y borramos tu nombre y tu correo de nuestros registros.'),
-      h('p', {}, 'Solo guardamos estadísticas de uso, sin datos personales ni contenido: número de sesiones, de equipos y de organizaciones participantes. Tu documento original es tuyo y nunca se elimina.'),
+      h('p', {}, 'En Sintropía Social no conservamos el contenido de los documentos que compartes en Task live. Para que los equipos puedan trabajar, la plataforma genera copias temporales; una vez que enviamos tu correo de cierre con el resultado, eliminamos esas copias y los archivos generados, y los enlaces a tus documentos que guardaba el sistema.'),
+      h('p', {}, 'Lo único que conservamos son los datos que cada persona nos autoriza a guardar al finalizar (nombre, correo y organización), para estadística, y las cifras de uso de la plataforma. Tu documento original es tuyo y nunca se elimina.'),
       h('p', { class: 'note' }, 'El texto de cada equipo se procesa con un servicio de inteligencia artificial únicamente para corregir la ortografía y redactar las recomendaciones que se envían por correo. Si el resultado no pudiera escribirse en tu documento original, la copia del equipo se conserva unos días para que no se pierda el trabajo y después también se elimina.')),
     h('section', { class: 'card' }, h('h2', {}, 'Crear una sala'), h('p', { class: 'sub' }, 'No necesitas cuenta ni clave.'), form,
       null),
@@ -333,7 +333,7 @@ function renderCreated(r, base, panel) {
       linkRow(many ? 'Enlace general (cada persona elige su equipo)' : null, base),
       many ? h('table', { class: 't' }, h('thead', {}, h('tr', {}, h('th', {}, 'Equipo'), h('th', {}, 'Enlace'))), h('tbody', {}, rows)) : null),
     h('section', { class: 'card' }, h('h2', {}, 'Tu panel de facilitación'),
-      h('p', { class: 'sub' }, 'Ahí ves el estado de cada equipo, abres sus copias y ves quién finalizó. Por privacidad, poco después de enviar cada correo se eliminan las copias y se borran nombres y correos: si necesitas la lista (nombre, correo y organización), descárgala antes.'),
+      h('p', { class: 'sub' }, 'Ahí ves el estado de cada equipo, abres sus copias y ves quién finalizó, y descargas la lista (nombre, correo y organización). Por privacidad, poco después de enviar los correos se eliminan las copias de cada equipo.'),
       linkRow(null, panel, 'Abrir panel'),
       h('div', { class: 'callout warn' }, h('b', {}, 'Guárdalo y no lo compartas. '), 'Quien tenga este enlace ve los correos de tu sala. También queda en "Mis salas" de este navegador.')),
     h('section', { class: 'card' }, h('h2', {}, 'Qué pasa después'),
@@ -341,7 +341,7 @@ function renderCreated(r, base, panel) {
         h('li', {}, 'Cada equipo abre su copia y trabaja en ella, en vivo.'),
         h('li', {}, 'Cuando un equipo pulsa "Finalizar" deja su nombre, correo y organización. Se revisa la ortografía con IA y el trabajo se escribe en tu documento con el color del equipo.'),
         h('li', {}, 'Cada persona que finaliza recibe por correo el enlace de tu documento, el resultado de su equipo en PDF y en un documento editable, y la lectura con recomendaciones de Sintropía Social.'),
-        h('li', {}, 'Poco después de enviar los correos, Task live elimina las copias de cada equipo y los datos personales. Tu documento original se conserva.'))),
+        h('li', {}, 'Poco después de enviar los correos, Task live elimina las copias de cada equipo y los archivos generados. Tu documento original se conserva.'))),
     h('p', {}, h('a', { class: 'btn ghost', href: './' }, 'Crear otra sala')));
 }
 
@@ -455,7 +455,7 @@ function renderFinalize(room, team, box) {
     } },
       h('label', { for: 'fn' }, 'Tu nombre'), name, h('label', { for: 'fe' }, 'Tu correo'), mail, h('label', { for: 'fo' }, 'Tu organización'), org,
       h('div', { class: 'hp', 'aria-hidden': 'true' }, h('label', { for: 'hp' }, 'No llenar'), hp),
-      h('div', { class: 'check' }, consent, h('label', { for: 'fc' }, 'Autorizo que Sintropía Social use mi nombre, correo y organización para enviarme este resultado, y que el texto de mi equipo se procese con un servicio de IA para corregir la ortografía y redactar recomendaciones. Entiendo que después de enviarme el correo se eliminan las copias de trabajo y mi nombre y correo, y que solo se conservan estadísticas sin datos personales. ',
+      h('div', { class: 'check' }, consent, h('label', { for: 'fc' }, 'Autorizo que Sintropía Social guarde mi nombre, correo y organización para enviarme este resultado y para fines de estadística, y que el texto de mi equipo se procese con un servicio de IA para corregir la ortografía y redactar recomendaciones. Entiendo que después de enviarme el correo se eliminan las copias de trabajo y los archivos generados. ',
         PRIVACY_URL ? h('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer' }, 'Aviso de privacidad') : null)),
       h('div', { style: { marginTop: '16px' } }, btn), out);
     add(formBox, form); name.focus();
