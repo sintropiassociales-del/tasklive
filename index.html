@@ -315,7 +315,12 @@ function viewHome() {
       null),
     recent.length ? h('section', { class: 'card' }, h('h2', {}, 'Mis salas en este navegador'),
       h('table', { class: 't' }, h('tbody', {}, recent.map(r => h('tr', {}, h('td', {}, h('b', {}, r.name), h('div', { class: 'who' }, r.at)),
-        h('td', { style: { textAlign: 'right' } }, h('a', { class: 'btn ghost sm', href: r.panel }, 'Abrir panel'))))))) : null);
+        h('td', { style: { textAlign: 'right' } }, h('a', { class: 'btn ghost sm', href: r.panel }, 'Abrir panel'))))))) : null,
+    h('section', { class: 'card', 'aria-label': 'Apoya este proyecto' }, h('h2', {}, 'Apoya este proyecto'),
+      h('p', {}, 'En Sintropía Social creemos que el conocimiento, la tecnología y la investigación deben estar al alcance de más personas. Por eso desarrollamos recursos y herramientas que facilitan el aprendizaje, el trabajo colaborativo y la recuperación del conocimiento.'),
+      h('p', {}, 'Tu donación, sin importar su cantidad, nos ayuda a mantener estos proyectos, crear nuevas soluciones y reconocer el trabajo de las personas que están detrás de cada desarrollo. Puedes contribuir desde un peso hasta la cantidad que desees.'),
+      h('p', {}, h('a', { class: 'btn act', href: 'https://www.paypal.com/donate/?hosted_button_id=84RDSWN99GWCN', target: '_blank', rel: 'noopener' }, 'Donar con PayPal')),
+      h('p', { class: 'note' }, 'Se abre PayPal en una pestaña nueva, así no pierdes tu trabajo en Task live. Puedes pagar con tu cuenta PayPal o con tarjeta de débito o crédito.')));
 }
 
 function renderCreated(r, base, panel) {
